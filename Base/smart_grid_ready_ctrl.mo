@@ -3,7 +3,7 @@ within MoMoUrEnSySi.Base;
 model smart_grid_ready_ctrl "smart grid ready hysteresis ctrl"
 
 	// Parameters
-	parameter Real dt_hyst=5;
+	parameter Real dt_hyst=5; // [deg.C]
 
 	// Input
 	Modelica.Blocks.Interfaces.IntergerInput io_smart;
