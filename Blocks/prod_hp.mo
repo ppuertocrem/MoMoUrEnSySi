@@ -1,4 +1,4 @@
-within momourensysi.blocks;
+within MoMoUrEnSySi.Blocks;
 
 model prod_hp "Hysteresis controlled smart grid ready heat pump with thermal buffer"
 end prod_hp;
