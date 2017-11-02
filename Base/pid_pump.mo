@@ -1,10 +1,11 @@
 within MoMoUrEnSySi.Base;
 
-model flow_mix "3way valve and circulation pump"
+model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T"
 
 	// Parameters
 	parameter Real conso_spec_pump=250;  // [W/(m3/s)]
 	parameter Real dt_set=5;  // [deg.C]
+	parameter Real volumeFlow_max=1  // [m3/s]
 
 	// Input
 	Modelica.Thermal.Interfaces.FlowPort_a port_hot_in;
@@ -15,12 +16,13 @@ model flow_mix "3way valve and circulation pump"
 	// Output
 	Modelica.Thermal.Interfaces.FlowPort_b port_hot_out;
 	Modelica.Thermal.Interfaces.FlowPort_b port_cold_out;
+
 	Modelica.Blocks.Interfaces.RealOutput p_elec;
 
 	// Nodes
-	Modelica.Blocks.Continuous.LimPID pid;
+	Modelica.Blocks.Continuous.LimPID pid(yMax=volumeFlow_max, yMin=0);
 	Modelica.Blocks.Logical.Switch switch;
-	Modelica.Thermal.FluidHeatFlow.Sources.VolumeFlow ideal_pump;
+	Modelica.Thermal.FluidHeatFlow.Sources.VolumeFlow ideal_pump(useVolumeFlowInput=true);
 	Modelica.Thermal.FluidHeatFlow.Sensors.RelTemperatureSensor sensor;
 
 equation
@@ -49,4 +51,4 @@ equation
 	// Power consumption
 	p_elec = conso_spec_p_el_pump * switch.y;
 
-end flow_mix;
+end pid_pump;
