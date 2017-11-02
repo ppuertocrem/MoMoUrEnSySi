@@ -1,6 +1,6 @@
 within MoMoUrEnSySi.Base;
 
-model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T"
+model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 ports)"
 
 	// Parameters
 	parameter Real conso_spec_pump=250;  // [W/(m3/s)]
@@ -31,7 +31,7 @@ equation
 	pid.u_s = dt_set;
 	connect(pid.u_m, sensor.y);
 
-	// Master switch
+	// Master SWITCH
 	connect(switch.u1, pid.y);
 	switch.u2 = io;
 	switch.u3 = 0.0;
