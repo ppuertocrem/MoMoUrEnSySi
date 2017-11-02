@@ -5,8 +5,8 @@ model heat_pump "heat pump with fixed power"
 	// Parameters
 	parameter Real p_nominal=100;  // [kW]
 
-	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium_src=Modelica.Thermal.FluidHeatFlow.Media.Medium();
-	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium_sink=Modelica.Thermal.FluidHeatFlow.Media.Medium();
+	parameter FluidHeatFlow.Media.Medium medium_src = Modelica.Media.Water.StandardWater;
+	parameter FluidHeatFlow.Media.Medium medium_sink = Modelica.Media.Water.StandardWater;
 
 	// Input
 	Modelica.Thermal.Interfaces.FlowPort_a port_src_in(medium=medium_src);
@@ -60,8 +60,8 @@ equation
 	p_sink = if io then p_nominal else 0.0;
 
 	// Heat
-	hex_src.heatPort.Q_flow = p_sink * 1000;  // [W]
-	hex_sink.heatPort.Q_flow = p_sink * (1 / cop - 1) * 1000;  // [W]
+	hex_src.heatPort.Q_flow = p_sink * 1E3;  // [W]
+	hex_sink.heatPort.Q_flow = p_sink * (1 / cop - 1) * 1E3;  // [W]
 
 	// Power consumed
 	p_elec = p_sink / cop;
