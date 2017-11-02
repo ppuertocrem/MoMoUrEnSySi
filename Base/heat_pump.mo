@@ -9,14 +9,14 @@ model heat_pump "heat pump with fixed power"
 	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium_sink=Modelica.Thermal.FluidHeatFlow.Media.Medium();
 
 	// Input
-	Modelica.Thermal.Interfaces.FlowPort_a port_src_in;
-	Modelica.Thermal.Interfaces.FlowPort_a port_sink_in;
+	Modelica.Thermal.Interfaces.FlowPort_a port_src_in(medium=medium_src);
+	Modelica.Thermal.Interfaces.FlowPort_a port_sink_in(medium=medium_sink);
 
 	Modelica.Blocks.Interfaces.BooleanInput io;
 
 	// Output
-	Modelica.Thermal.Interfaces.FlowPort_b port_src_out;
-	Modelica.Thermal.Interfaces.FlowPort_b port_sink_out;
+	Modelica.Thermal.Interfaces.FlowPort_b port_src_out(medium=medium_src);
+	Modelica.Thermal.Interfaces.FlowPort_b port_sink_out(medium=medium_sink);
 	Modelica.Blocks.Interfaces.RealOutput p_elec;
 
 	// Nodes

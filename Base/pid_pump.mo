@@ -12,14 +12,14 @@ model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 po
 	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium=Modelica.Thermal.FluidHeatFlow.Media.Medium();
 
 	// Input
-	Modelica.Thermal.Interfaces.FlowPort_a port_hot_in;
-	Modelica.Thermal.Interfaces.FlowPort_a port_cold_in;
+	Modelica.Thermal.Interfaces.FlowPort_a port_hot_in(medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_a port_cold_in(medium=medium);
 
 	Modelica.Blocks.Interfaces.BooleanInput io;
 
 	// Output
-	Modelica.Thermal.Interfaces.FlowPort_b port_hot_out;
-	Modelica.Thermal.Interfaces.FlowPort_b port_cold_out;
+	Modelica.Thermal.Interfaces.FlowPort_b port_hot_out(medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_b port_cold_out(medium=medium);
 
 	Modelica.Blocks.Interfaces.RealOutput p_elec;
 
