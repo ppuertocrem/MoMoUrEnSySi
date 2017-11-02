@@ -41,26 +41,31 @@ equation
 	m_flow_prod = port_prod_in.m_flow = port_prod_out.m_flow;
 	m_flow_cons = port_cons_in.m_flow = port_cons_out.m_flow;
 
+	// Resultant flows from m_flow_prod and m_flow_cons (if m_flow_prod = m_flow_cons then m_up = m_do = 0.0)
 	m_up = if m_flow_cons > m_flow_prod then (m_flow_cons - m_flow_prod) else 0.0;
 	m_do = if m_flow_cons < m_flow_prod then (m_flow_prod - m_flow_cons) else 0.0;
 
+	// Input temperature
 	t_in_prod = port_prod_in.h / medium.cp;
 	t_in_cons = port_cons_in.h / medium.cp;
 
+	// Heat flows by conduction between layers and with environnement
 	q_cond_top = (conSidSeg + conTopSeg) * (TAmb - t_top) + conFluSeg * (t_mid - t_top);
 	q_cond_mid = conSidSeg * (TAmb - t_mid) + conFluSeg * (t_top - 2*t_mid + t_bot);
 	q_cond_bot = (conSidSeg + conTopSeg) * (TAmb - t_bot) + conFluSeg * (t_mid - t_bot);
 
+	// Heat flows by mass exchange (input and output ports + exchange between layers)
 	q_port_top = medium.cp * (m_flow_prod * t_in_prod - m_flow_cons * t_top + m_up * t_mid - m_do * t_top)
 	q_port_mid = medium.cp * (m_up * (t_bot - t_mid) + m_do * (t_top - t_mid))
 	q_port_bot = medium.cp * (m_flow_cons * t_in_cons - m_flow_prod * t_bot - m_up * t_bot + m_do * t_mid)
 
+	// Heat conservation equation
 	VSeg * medium.rho * medium.cp * der(t_top) = q_cond_top + q_port_top 
 	VSeg * medium.rho * medium.cp * der(t_mid) = q_cond_mid + q_port_mid
 	VSeg * medium.rho * medium.cp * der(t_bot) = q_cond_bot + q_port_bot
 
-	port_prod_out.h = medium.cd * t_bot;
-	port_cons_out.h = medium.cd * t_top;
-
+	// Output temperatures
+	port_prod_out.h = medium.cp * t_bot;
+	port_cons_out.h = medium.cp * t_top;
 
 end buffer;
