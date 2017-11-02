@@ -3,7 +3,9 @@ within MoMoUrEnSySi.Base;
 model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 ports)"
 
 	// Parameters
-	parameter Real conso_spec_pump=250;  // [W/(m3/s)]
+	// https://www.engineeringtoolbox.com/pumps-power-d_505.html
+	parameter Real conso_spec_pump=250;  // [kW/(m3/s)]
+
 	parameter Real dt_set=5;  // [deg.C]
 	parameter Real volumeFlow_max=1  // [m3/s]
 
