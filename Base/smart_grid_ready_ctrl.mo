@@ -3,7 +3,7 @@ within MoMoUrEnSySi.Base;
 model smart_grid_ready_ctrl "smart grid ready hysteresis ctrl"
 
 	// Parameters
-	parameter Real dt_hyst=5; // [deg.C]
+	parameter Real dt_hyst=2.5; // [deg.C]
 
 	// Input
 	Modelica.Blocks.Interfaces.IntergerInput io_smart;
@@ -21,15 +21,17 @@ model smart_grid_ready_ctrl "smart grid ready hysteresis ctrl"
 
 equation
 
-	positif.u = io_smart;
-	
+	// Defining uHigh for hysteresis
 	add.u1 = io_smart;
 	add.u2 = t_set;
 	
+	// Hysteresis definition
 	hysteresis.u = t_top;
-	hysteresis.uLow = t_set;
+	hysteresis.uLow = t_set - 0.5;
 	connect(add.y, hysteresis.uHigh);
 
+	// Master "SWITCH" (with an AND)
+	positif.u = io_smart;
 	connect(positif.y, finalAnd.u1);
 	connect(hysteresis.y, finalAnd.u2);
 	io = finalAnd.y;
