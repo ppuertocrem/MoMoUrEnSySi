@@ -57,7 +57,7 @@ equation
 	connect(hex_sink.flowPort_b, port_sink_out);
 
 	// Master "SWITCH"
-	p_sink = if io then p_nominal else 0.0
+	p_sink = if io then p_nominal else 0.0;
 
 	// Heat
 	hex_src.heatPort.Q_flow = p_sink * 1000;  // [W]
