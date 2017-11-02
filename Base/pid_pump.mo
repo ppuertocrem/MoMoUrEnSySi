@@ -9,6 +9,8 @@ model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 po
 	parameter Real dt_set=5;  // [deg.C]
 	parameter Real volumeFlow_max=1  // [m3/s]
 
+	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium=Modelica.Thermal.FluidHeatFlow.Media.Medium();
+
 	// Input
 	Modelica.Thermal.Interfaces.FlowPort_a port_hot_in;
 	Modelica.Thermal.Interfaces.FlowPort_a port_cold_in;
@@ -24,8 +26,13 @@ model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 po
 	// Nodes
 	Modelica.Blocks.Continuous.LimPID pid(yMax=volumeFlow_max, yMin=0);
 	Modelica.Blocks.Logical.Switch switch;
-	Modelica.Thermal.FluidHeatFlow.Sources.VolumeFlow ideal_pump(useVolumeFlowInput=true);
-	Modelica.Thermal.FluidHeatFlow.Sensors.RelTemperatureSensor sensor;
+	Modelica.Thermal.FluidHeatFlow.Sources.VolumeFlow ideal_pump(
+		medium=medium,
+		m=0,
+		TO=293.5 
+		useVolumeFlowInput=true);
+	Modelica.Thermal.FluidHeatFlow.Sensors.RelTemperatureSensor sensor(
+		medium=medium);
 
 equation
 
@@ -47,8 +54,8 @@ equation
 	connect(port_cold_in, port_cold_out);
 
 	// Sensor
-	connect(port_hot_in, flowPort_a);
-	connect(port_cold_in, flowPort_b);
+	connect(port_hot_in, sensor.flowPort_a);
+	connect(port_cold_in, sensor.flowPort_b);
 
 	// Power consumption
 	p_elec = conso_spec_p_el_pump * switch.y;
