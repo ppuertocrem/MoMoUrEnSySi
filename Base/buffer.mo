@@ -2,37 +2,39 @@ within MoMoUrEnSySi.Base;
 
 model buffer "stratified thermal storage / buffer (3 layers with uniform temperature and constant volumes)"
 
-	// Parameters
-	parameter Modelica.SIunits.Temperature TAmb = 293.15 "Ambient temperature";  // [K]
-	parameter Modelica.SIunits.Volume VTan = 3 "Tank volume";  // [m3]
-	parameter Modelica.SIunits.Length hTan = 1.5 "Height of tank (without insulation)";  // [m]
-	parameter Modelica.SIunits.Length dIns = 0.05 "Thickness of insulation";  // [m]
-	parameter Modelica.SIunits.ThermalConductivity kIns = 0.04 "Specific heat conductivity of insulation";  // [W/m/K]
+	import SI = Modelica.SIunits;
 
-	parameter Modelica.Thermal.FluidHeatFlow.Media.Medium medium=Modelica.Thermal.FluidHeatFlow.Media.Medium();
+	// Parameters
+	parameter SI.Temperature TAmb = 293.15 "Ambient temperature";  // [K]
+	parameter SI.Volume VTan = 3 "Tank volume";  // [m3]
+	parameter SI.Length hTan = 1.5 "Height of tank (without insulation)";  // [m]
+	parameter SI.Length dIns = 0.05 "Thickness of insulation";  // [m]
+	parameter SI.ThermalConductivity kIns = 0.04 "Specific heat conductivity of insulation";  // [W/m/K]
+
+	replaceable package medium = Modelica.Media.Water.StandardWater;
 
 	// Input
-	Modelica.Thermal.Interfaces.FlowPort_a port_prod_in(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_a port_cons_in(medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_a port_prod_in(redeclare package medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_a port_cons_in(redeclare package medium=medium);
 
 	// Output
-	Modelica.Thermal.Interfaces.FlowPort_b port_prod_out(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_b port_cons_out(medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_b port_prod_out(redeclare package medium=medium);
+	Modelica.Thermal.Interfaces.FlowPort_b port_cons_out(redeclare package medium=medium);
 	Modelica.Blocks.Interfaces.RealOutput t_top;
 
 protected
 
 	pi = Modelica.Constants.pi
 
-	parameter Modelica.SIunits.Length VSeg = VTan / 3 "Volume of a tank segment";  // [m3]
-	parameter Modelica.SIunits.Length hSeg = hTan / 3 "Height of a tank segment";  // [m]
-	parameter Modelica.SIunits.Area ATan = VTan/hTan "Tank cross-sectional area (without insulation)";  // [m2]
-	parameter Modelica.SIunits.Length rTan = sqrt(ATan/pi) "Tank diameter (without insulation)";  // [m]
-	parameter Modelica.SIunits.Area ASeg = hSeg*2*pi*rTan "Segment side area (without insulation)";  // [m2]
+	parameter SI.Length VSeg = VTan / 3 "Volume of a tank segment";  // [m3]
+	parameter SI.Length hSeg = hTan / 3 "Height of a tank segment";  // [m]
+	parameter SI.Area ATan = VTan/hTan "Tank cross-sectional area (without insulation)";  // [m2]
+	parameter SI.Length rTan = sqrt(ATan/pi) "Tank diameter (without insulation)";  // [m]
+	parameter SI.Area ASeg = hSeg*2*pi*rTan "Segment side area (without insulation)";  // [m2]
 
-	parameter Modelica.SIunits.ThermalConductance conFluSeg = ATan*Medium.lamda/hSeg "Thermal conductance between fluid volumes";  // [W/K]
-	parameter Modelica.SIunits.ThermalConductance conTopSeg = ATan*kIns/dIns "Thermal conductance (top and bottom)";  // [W/K]
-	parameter Modelica.SIunits.ThermalConductance conSidSeg = ASeg*kIns/dIns "Thermal conductance (side)";  // [W/K]
+	parameter SI.ThermalConductance conFluSeg = ATan*medium.lamda/hSeg "Thermal conductance between fluid volumes";  // [W/K]
+	parameter SI.ThermalConductance conTopSeg = ATan*kIns/dIns "Thermal conductance (top and bottom)";  // [W/K]
+	parameter SI.ThermalConductance conSidSeg = ASeg*kIns/dIns "Thermal conductance (side)";  // [W/K]
 
 equation
 
