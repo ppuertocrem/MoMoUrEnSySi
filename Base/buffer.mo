@@ -1,26 +1,18 @@
 within MoMoUrEnSySi.Base;
 
 model buffer "stratified thermal storage / buffer (3 layers with uniform temperature and constant volumes)"
+	extends MoMoUrEnSySi.Partial.PartialFourPorts;
 
 	import SI = Modelica.SIunits;
 
 	// Parameters
-	parameter SI.Temperature TAmb = 293.15 "Ambient temperature";  // [K]
 	parameter SI.Volume VTan = 3 "Tank volume";  // [m3]
 	parameter SI.Length hTan = 1.5 "Height of tank (without insulation)";  // [m]
 	parameter SI.Length dIns = 0.05 "Thickness of insulation";  // [m]
 	parameter SI.ThermalConductivity kIns = 0.04 "Specific heat conductivity of insulation";  // [W/m/K]
 
-	parameter FluidHeatFlow.Media.Medium medium = Modelica.Media.Water.StandardWater;
-
-	// Input
-	Modelica.Thermal.Interfaces.FlowPort_a port_prod_in(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_a port_cons_in(medium=medium);
-
 	// Output
-	Modelica.Thermal.Interfaces.FlowPort_b port_prod_out(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_b port_cons_out(medium=medium);
-	Modelica.Blocks.Interfaces.RealOutput t_top;
+	output SI.Temperature t_top "Top layer temperature";  // [K]
 
 protected
 

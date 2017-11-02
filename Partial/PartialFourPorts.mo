@@ -2,7 +2,10 @@ within MoMoUrEnSySi.Partial;
 
 partial model PartialFourPorts "Partial model of four flow ports component with a unique medium"
 
-	import TH = Modelica.Thermal
+	import SI = Modelica.SIunits;
+	import TH = Modelica.Thermal;
+
+	parameter SI.Temperature TAmb = 293.15 "Ambient temperature";  // [K]
 
 	replaceable package medium=TH.FluidHeatFlow.Media.Water
 

@@ -1,7 +1,6 @@
 within MoMoUrEnSySi.Base;
 
 model hysteresis "hysteresis with uHigh and uLow as inputs"
-	
 	extends Modelica.Blocks.PartialBooleanBlock;
 
 	parameter Boolean pre_y_start=false;

@@ -1,38 +1,25 @@
 within MoMoUrEnSySi.Base;
 
-model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T (4 ports)"
+model pid_pump "circulation ideal pump controlled (PID) by a fixed delta T"
+	extends MoMoUrEnSySi.Partial.PFPTM_io_pelec;
 
 	// Parameters
 	// https://www.engineeringtoolbox.com/pumps-power-d_505.html
-	parameter Real conso_spec_pump=250;  // [kW/(m3/s)]
-
-	parameter Real dt_set=5;  // [deg.C]
-	parameter Real volumeFlow_max=1  // [m3/s]
-
-	parameter FluidHeatFlow.Media.Medium medium = Modelica.Media.Water.StandardWater;
-
-	// Input
-	Modelica.Thermal.Interfaces.FlowPort_a port_hot_in(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_a port_cold_in(medium=medium);
-
-	Modelica.Blocks.Interfaces.BooleanInput io;
-
-	// Output
-	Modelica.Thermal.Interfaces.FlowPort_b port_hot_out(medium=medium);
-	Modelica.Thermal.Interfaces.FlowPort_b port_cold_out(medium=medium);
-
-	Modelica.Blocks.Interfaces.RealOutput p_elec;
+	parameter Real conso_spec_pump=250 "Specific electrical power consumed by pump";  // [kW/(m3/s)]
+	parameter Real dt_set=5 "Set point for temperature difference";  // [deg.C]
+	parameter Real volumeFlow_max=1 "Maximum flow allowed by pump";  // [m3/s]
 
 	// Nodes
-	Modelica.Blocks.Continuous.LimPID pid(yMax=volumeFlow_max, yMin=0);
-	Modelica.Blocks.Logical.Switch switch;
+	Modelica.Blocks.Continuous.LimPID pid(yMax=volumeFlow_max, yMin=0.0);
+
 	Modelica.Thermal.FluidHeatFlow.Sources.VolumeFlow ideal_pump(
-		medium=medium,
+		medium=medium1,
 		m=0,
-		TO=293.5 
+		TO=TAmb;
 		useVolumeFlowInput=true);
+
 	Modelica.Thermal.FluidHeatFlow.Sensors.RelTemperatureSensor sensor(
-		medium=medium);
+		medium=medium1);
 
 equation
 
@@ -40,24 +27,19 @@ equation
 	pid.u_s = dt_set;
 	connect(pid.u_m, sensor.y);
 
-	// Master SWITCH
-	connect(switch.u1, pid.y);
-	switch.u2 = io;
-	switch.u3 = 0.0;
-
 	// Ideal pump
 	connect(switch.y, ideal_pump.volumeFlow);
 
 	// Pipes
-	connect(port_hot_in, ideal_pump.flowPort_a);
-	connect(ideal_pump.flowPort_b, port_hot_out);
-	connect(port_cold_in, port_cold_out);
+	connect(flowPort_a1, ideal_pump.flowPort_a);
+	connect(ideal_pump.flowPort_b, flowPort_b1);
+	connect(flowPort_a2, flowPort_b2);
 
 	// Sensor
-	connect(port_hot_in, sensor.flowPort_a);
-	connect(port_cold_in, sensor.flowPort_b);
+	connect(flowPort_b1, sensor.flowPort_a);
+	connect(flowPort_b2, sensor.flowPort_b);
 
 	// Power consumption
-	p_elec = conso_spec_p_el_pump * switch.y;
+	power = if io then conso_spec_p_el_pump * pid.y else 0.0
 
 end pid_pump;
