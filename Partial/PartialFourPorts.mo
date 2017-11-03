@@ -7,7 +7,7 @@ partial model PartialFourPorts "Partial model of four flow ports component with 
 
 	parameter SI.Temperature TAmb = 293.15 "Ambient temperature";  // [K]
 
-	replaceable package medium=TH.FluidHeatFlow.Media.Water
+	replaceable package medium=TH.FluidHeatFlow.Media.Water;
 
 	// Input
 	TH.Interfaces.FlowPort_a flowPort_a1(medium = medium);
